@@ -1,10 +1,13 @@
+#%%
 from ftplib import FTP
 import json
 import sys
 import os
 import zipfile
 import xml.etree.ElementTree as ET
+from datetime import datetime as dt
 
+#%%
 #This first part sets up the variables, such as FTP credentials and the feed specifics
 mode = input("Use config file? (Y/N) ")
 if mode == "Y":
@@ -17,10 +20,13 @@ if mode == "Y":
         feed_seq = data["feed"]["sequence"]
         feed_type = data["feed"]["type"]
         temp = data["temp"]
+        log = data["log"]
 else:
     data_dict = {}
     temp = input("Where would you like to use as your temp folder: ")
     data_dict["temp"] = temp
+    log = input("Where would you like to use as your log file: ")
+    data_dict["log"] = log
     data_dict["ftp"] = {}
     ftp_site = input ("Please enter the FTP site address: ")
     data_dict["ftp"]["site"] = ftp_site
@@ -38,9 +44,10 @@ else:
     with open('config.json', 'w') as config:
         json.dump(data_dict, config)
     
-
+#%%
 ftp = FTP(ftp_site, user, password)
-folder_contents = ftp.mlsd()
+open(log, 'a').write(str(dt.utcnow().strftime("%d-%m-%Y %H:%M")) + "\t FTP \t Logged in to " + ftp_site +"\n")
+folder_contents = list(ftp.mlsd())
 
 #We then check for md5 checksum files, the last file to be delivered in LGDF deliveries, and create a list of batches to be processed
 batches_to_process = []
@@ -56,13 +63,20 @@ for item in folder_contents:
 if len(batches_to_process) == 0: sys.quit()
 batches_to_process = sorted(batches_to_process)
 
+#%%
+#This next part downloads each of the zip files for each of the batches in turn, unzipping them, parsing their contents before writing them to a database
 for batch in batches_to_process:
     for file in folder_contents:
-        print(file)
-        if not file.startswith(batch): continue
-        local_filename = os.path.join(temp, file)
+        file_name = file[0]
+        if not file_name.startswith(batch): continue
+        if not file_name.endswith(".zip"): continue
+        if file[1]["size"] == 0:
+            open(log, 'a').write(str(dt.utcnow().strftime("%d-%m-%Y %H:%M")) + "\t ERROR \t 0 byte file: " + file_name +"\n")
+            continue
+        local_filename = os.path.join(temp, file_name)
         f = open(local_filename, 'wb')
-        ftp.retrbinary('RETR ' + file, f.write, 262144)
+        ftp.retrbinary('RETR ' + file_name, f.write, 262144)
+        open(log, 'a').write(str(dt.utcnow().strftime("%d-%m-%Y %H:%M")) + "\t FTP \t Downloaded " + file_name +"\n")
         f.close()
         for zipfilename in os.listdir(temp):
             if not (zipfile.is_zipfile(temp+ '\\' + zipfilename)): continue
