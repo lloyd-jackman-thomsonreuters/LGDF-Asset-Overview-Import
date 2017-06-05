@@ -82,7 +82,7 @@ for batch in batches_to_process:
             if not (zipfile.is_zipfile(temp+ '\\' + zipfilename)): continue
             print(('Unzipping ' + temp + '\\' + zipfilename))
             zipfile.ZipFile(temp+ '\\' + zipfilename).extractall()
-            os.remove(zipfilename)
+            os.remove(temp+ '\\' + zipfilename)
             for filename in os.listdir(temp):
                 if not filename.endswith('.xml'): continue
                 print('Processing ' + filename)
