@@ -1,0 +1,1232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://schemas.thomsonreuters.com/2012/06/30/df5v1.0"
+    targetNamespace="http://schemas.thomsonreuters.com/2012/06/30/df5v1.0"
+    elementFormDefault="qualified">
+
+    <!-- Version 1.01.019 -->
+    <xs:element name="Feed">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="AssetOverview" type="AssetOverviewType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="FinancialHistory" type="FinancialHistoryType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="PortfolioHistory" type="PortfolioHistoryType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="FlowsHistory" type="FlowsHistoryType" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+            <xs:attribute name="Language" type="xs:string" use="optional" />
+            <xs:attribute name="DeltasFrom" type="xs:date" use="optional" />
+            <xs:attribute name="DeltasTo" type="xs:date" use="optional" />
+            <xs:attribute name="Version" type="xs:string" use="optional" />
+        </xs:complexType>
+    </xs:element>
+
+    <!-- ******************** Overview ********************  -->
+
+    <xs:complexType name="AssetOverviewType">
+        <xs:all>
+            <xs:element name="Profile" type="ProfileType" minOccurs="0" />
+            <xs:element name="FeesExpenses" type="FeesExpensesType" minOccurs="0" />
+            <xs:element name="MinimumInvestments" type="MinimumInvestmentsType" minOccurs="0" />
+            <xs:element name="Classifications" type="ClassificationsType" minOccurs="0" />
+            <xs:element name="Performance" type="PerformanceType" minOccurs="0" />
+            <xs:element name="Ratings" type="RatingsType" minOccurs="0" />
+            <xs:element name="Portfolio" type="PortfolioType" minOccurs="0" />
+            <xs:element name="Events" type="EventsType" minOccurs="0" />
+            <xs:element name="ShareClasses" type="ShareClassesType" minOccurs="0" />
+            <xs:element name="PortfolioHistory" type="PortfolioHistoryType" minOccurs="0" />
+        </xs:all>
+        <xs:attribute name="Id" type="xs:integer" use="required" />
+        <xs:attribute name="Deleted" type="xs:boolean" use="optional" />
+    </xs:complexType>
+
+    <!-- Top Level -->
+
+    <xs:complexType name="ProfileType">
+        <xs:sequence>
+            <xs:element name="Names" type="NamesType" minOccurs="0" />
+            <xs:element name="CrossReferenceCodes" type="CrossReferenceCodesType" minOccurs="0" />
+            <xs:element name="KeyData" type="KeyDataType" minOccurs="0" />
+            <xs:element name="MarketData" type="MarketDataType" minOccurs="0" />
+            <xs:element name="LaunchInfo" type="LaunchInfoType" minOccurs="0" />
+            <xs:element name="Attributes" type="AttributesType" minOccurs="0" />
+            <xs:element name="RegisteredForSaleIn" type="RegisteredForSaleInType" minOccurs="0" />
+            <xs:element name="ServiceProviders" type="ServiceProvidersType" minOccurs="0" />
+            <xs:element name="Benchmarks" type="BenchmarksType" minOccurs="0" />
+            <xs:element name="AssetValues" type="AssetValuesType" minOccurs="0" />
+            <xs:element name="Prices" type="PricesType" minOccurs="0" />
+            <xs:element name="IncomeInformation" type="IncomeInformationType" minOccurs="0" />
+            <xs:element name="RelatedAssets" type="RelatedAssetsType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- Base Types -->
+
+    <xs:complexType name="BooleanFieldType">
+        <xs:simpleContent>
+            <xs:extension base="xs:boolean">
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="StringFieldType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="TranslatedTextType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="Language" type="xs:string"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="TranslatedStringFieldType">
+        <xs:sequence>
+            <xs:element name="Text" type="TranslatedTextType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="DateFieldType">
+        <xs:simpleContent>
+            <xs:extension base="xs:date">
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="DecimalFieldType">
+        <xs:simpleContent>
+            <xs:extension base="xs:decimal">
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="CurrencyFieldType">
+        <xs:simpleContent>
+            <xs:extension base="xs:decimal">
+                <xs:attribute name="Currency" type="xs:string"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="CalcFieldType">
+        <xs:simpleContent>
+            <xs:extension base="xs:decimal">
+                <xs:attribute name="Currency" type="xs:string" use="optional" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="IntegerFieldType">
+        <xs:simpleContent>
+            <xs:extension base="xs:int">
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="IdentityType">
+        <xs:simpleContent>
+            <xs:extension base="StringFieldType">
+                <xs:attribute name="Id" type="xs:string"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="TranslatedIdentityType">
+        <xs:complexContent>
+            <xs:extension base="TranslatedStringFieldType">
+                <xs:attribute name="Id" type="xs:string"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="DatedDecimalFieldType">
+        <xs:simpleContent>
+            <xs:extension base="DecimalFieldType">
+                <xs:attribute name="Date" type="xs:date" use="required" />
+                <xs:attribute name="Currency" type="xs:string" use="optional" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="DatedStringFieldType">
+        <xs:simpleContent>
+            <xs:extension base="StringFieldType">
+                <xs:attribute name="Date" type="xs:date" use="required" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <!-- Fees and Expenses -->
+
+    <xs:complexType name="FeesExpensesType">
+        <xs:sequence>
+            <xs:element name="Charges" type="ChargesType" minOccurs="0" />
+            <xs:element name="Fees" type="FeesType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- Ratings -->
+
+    <xs:complexType name="RatingsType">
+        <xs:sequence>
+            <xs:element name="LipperLeaders" type="LipperLeadersType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- Events -->
+
+    <xs:complexType name="SplitType">
+        <xs:sequence>
+            <xs:element name="EffectiveDate" type="DateFieldType" />
+            <xs:element name="Ratio" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="OldHolding" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="NewHolding" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="SpecialPrice" type="CurrencyFieldType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SplitsType">
+        <xs:sequence>
+            <xs:element name="Split" type="SplitType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MergerType">
+        <xs:sequence>
+            <xs:element name="EffectiveDate" type="DateFieldType" />
+            <xs:element name="Successor" type="IdentityType" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MergersType">
+        <xs:sequence>
+            <xs:element name="Merger" type="MergerType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LiquidationsType">
+        <xs:sequence>
+            <xs:element name="Liquidation" type="DateFieldType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ChangeType">
+        <xs:sequence>
+            <xs:element name="OldValue" type="StringFieldType" />
+            <xs:element name="NewValue" type="StringFieldType" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ChangesType">
+        <xs:sequence>
+            <xs:element name="Change" type="ChangeType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ClosureType">
+        <xs:sequence>
+            <xs:element name="EffectiveDate" type="DateFieldType" />
+            <xs:element name="ReopenDate" type="DateFieldType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ClosuresType">
+        <xs:sequence>
+            <xs:element name="Closure" type="ClosureType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="NotesChangeType">
+        <xs:sequence>
+            <xs:element name="NoteChange" type="DatedStringFieldType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RightsIssueType">
+        <xs:sequence>
+            <xs:element name="EffectiveDate" type="DateFieldType" />
+            <xs:element name="OldHolding" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="NewHolding" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="SpecialPrice" type="CurrencyFieldType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RightsIssuesType">
+        <xs:sequence>
+            <xs:element name="RightsIssue" type="RightsIssueType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RepaymentType">
+        <xs:sequence>
+            <xs:element name="EffectiveDate" type="DateFieldType" />
+            <xs:element name="OldHolding" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="ExtraUnits" type="IntegerFieldType" minOccurs="0" />
+            <xs:element name="SpecialPrice" type="CurrencyFieldType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RepaymentsType">
+        <xs:sequence>
+            <xs:element name="Repayment" type="RepaymentType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="BonusIssueType">
+        <xs:sequence>
+            <xs:element name="EffectiveDate" type="DateFieldType" />
+            <xs:element name="OldHolding" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="ExtraUnits" type="IntegerFieldType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="BonusIssuesType">
+        <xs:sequence>
+            <xs:element name="BonusIssue" type="BonusIssueType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="EventsType">
+        <xs:sequence>
+            <xs:element name="Splits" type="SplitsType" minOccurs="0" />
+            <xs:element name="Mergers" type="MergersType" minOccurs="0" />
+            <xs:element name="Liquidations" type="LiquidationsType" minOccurs="0" />
+            <xs:element name="NameChanges" type="ChangesType" minOccurs="0" />
+            <xs:element name="Closures" type="ClosuresType" minOccurs="0" />
+            <xs:element name="Notes" type="NotesChangeType" minOccurs="0" />
+            <xs:element name="RightsIssues" type="RightsIssuesType" minOccurs="0" />
+            <xs:element name="Repayments" type="RepaymentsType" minOccurs="0" />
+            <xs:element name="BonusIssues" type="BonusIssuesType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+
+    <!-- Distribution History -->
+
+    <xs:complexType name="DistributionType">
+        <xs:sequence>
+            <xs:element name="XDate" type="DateFieldType" minOccurs="0" />
+            <xs:element name="XValue" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="ReinvestmentDate" type="DateFieldType" minOccurs="0" />
+            <xs:element name="ReinvestmentValue" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="ReinvestmentType" type="StringFieldType" minOccurs="0" />
+            <xs:element name="PaymentDate" type="DateFieldType" minOccurs="0" />
+            <xs:element name="TaxableInterestIncome" type="DecimalFieldType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Type" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="DistributionsType">
+        <xs:sequence>
+            <xs:element name="Distribution" type="DistributionType" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="DistributionCategoryType">
+        <xs:sequence>
+            <xs:element name="Sum" type="DecimalFieldType" />
+            <xs:element name="Currency" type="StringFieldType" />
+            <xs:element name="Details" type="DistributionsType"  minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Type" type="xs:string" use="required" />
+        <xs:attribute name="AsOfDate" type="xs:string" use="required" />
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+
+    <!-- Income Information -->
+
+    <xs:complexType name="IncomeOperationType">
+        <xs:sequence>
+            <xs:element name="Operation" type="StringFieldType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="DistributionPaymentScheduleType">
+        <xs:sequence>
+            <xs:element name="Month" type="xs:int" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="IncomeInformationType">
+        <xs:sequence>
+            <xs:element name="IncomeOperation" type="IncomeOperationType" minOccurs="0" />
+            <xs:element name="IncomeDistribution" type="StringFieldType" minOccurs="0" />
+            <xs:element name="IncomeAsInterest" type="BooleanFieldType" minOccurs="0" />
+            <xs:element name="DefaultTaxBasis" type="StringFieldType" minOccurs="0" />
+            <xs:element name="DistributionCategory" type="DistributionCategoryType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="DistributionPaymentSchedule" type="DistributionPaymentScheduleType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+
+
+    <!-- RelatedAssets -->
+
+    <xs:complexType name="VariableAnnuityType">
+        <xs:sequence>
+            <xs:element name="SubAccount" type="IdentityType" />
+            <xs:element name="Policy" type="IdentityType" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="VariableAnnuitiesType">
+        <xs:sequence>
+            <xs:element name="VariableAnnuity" type="VariableAnnuityType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="TargetDateType">
+        <xs:sequence>
+            <xs:element name="Family" type="IdentityType" />
+            <xs:element name="YearsToRetirement" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="AssetClass" type="StringFieldType" minOccurs="0" />
+            <xs:element name="Percentage" type="DecimalFieldType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RelatedAssetsType">
+        <xs:sequence>
+            <xs:element name="Umbrella" type="IdentityType" minOccurs="0" />
+            <xs:element name="Primary" type="IdentityType" minOccurs="0" />
+            <xs:element name="Vehicle" type="IdentityType" minOccurs="0" />
+            <xs:element name="Portfolio" type="IdentityType" minOccurs="0" />
+            <xs:element name="Parent" type="IdentityType" minOccurs="0" />
+            <xs:element name="VariableUnderlyingFund" type="IdentityType" minOccurs="0" />
+            <xs:element name="TargetDate" type="TargetDateType" minOccurs="0" />
+            <xs:element name="VariableAnnuities" type="VariableAnnuitiesType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+
+    <!-- Share Classes -->
+
+    <xs:complexType name="ShareClassesType">
+        <xs:sequence>
+            <xs:element name="ShareClass" type="AssetOverviewType" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- LaunchInfoType -->
+
+    <xs:complexType name="LaunchInfoType">
+        <xs:sequence>
+            <xs:element name="IPODate" type="DateFieldType" minOccurs="0" />
+            <xs:element name="IPOPrice" type="PriceSetType" minOccurs="0" />
+            <xs:element name="LaunchDate" type="DateFieldType" minOccurs="0" />
+            <xs:element name="LaunchPrice" type="PriceSetType" minOccurs="0" />
+            <xs:element name="SECInceptionDate" type="DateFieldType" minOccurs="0" />
+            <xs:element name="TaxableIncome" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="ValidHistoryDate" type="DateFieldType" minOccurs="0" />
+            <xs:element name="QualifiedHistoryDate" type="DateFieldType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+
+    <!-- MarketDataType -->
+
+    <xs:complexType name="MarketDataType">
+        <xs:sequence>
+            <xs:element name="LatestPrice" type="PriceSetType" minOccurs="0" />
+            <xs:element name="LatestPriceUsd" type="PriceSetType" minOccurs="0" />
+            <xs:element name="ValuationFrequency" type="StringFieldType" minOccurs="0" />
+            <xs:element name="ValuationDelay" type="DecimalFieldType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+
+    <!-- KeyDataType -->
+
+    <xs:complexType name="KeyDataType">
+        <xs:sequence>
+            <xs:element name="Attribute" type="AttributeType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="FiscalYearEnd" type="FiscalYearEndType" minOccurs="0" />
+            <xs:element name="PortfolioManagers" type="PortfolioManagersType" minOccurs="0" />
+            <xs:element name="Objective" type="TranslatedStringFieldType" minOccurs="0" />
+            <xs:element name="People" type="PeopleType" minOccurs="0" />
+            <xs:element name="ShariahAdvisoryBoard" type="ShariahAdvisoryBoardType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- ShariahAdvisoryBoard -->
+
+    <xs:complexType name="CompanyPersonType">
+        <xs:sequence>
+            <xs:element name="Name" type="xs:string" />
+            <xs:element name="StartDate" type="xs:date" />
+            <xs:element name="EndDate" type="xs:date" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="CommitteePersonType">
+        <xs:complexContent>
+            <xs:extension base="PersonType">
+                <xs:sequence>
+                    <xs:element name="BoardRole" type="TranslatedTextType" />
+                    <xs:element name="StartDate" type="xs:date" />
+                    <xs:element name="EndDate" type="xs:date" minOccurs="0" />
+                </xs:sequence>
+                <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="CommitteeType">
+        <xs:sequence>
+            <xs:element name="Person" type="CommitteePersonType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="ShariahAdvisoryBoardType">
+        <xs:sequence>
+            <xs:element name="CompanyPerson" type="CompanyPersonType"  minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Committee" type="CommitteeType"  minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- People -->
+
+    <xs:complexType name="PeopleType">
+        <xs:sequence>
+            <xs:element name="Person" type="PersonType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- Person -->
+    <xs:complexType name="PersonType">
+        <xs:sequence>
+            <xs:element name="Salutation" type="StringFieldType"  minOccurs="0"/>
+            <xs:element name="FirstName" type="StringFieldType"  minOccurs="0"/>
+            <xs:element name="MiddleName" type="StringFieldType" minOccurs="0" />
+            <xs:element name="LastName" type="StringFieldType" />
+            <xs:element name="JobTitle" type="StringFieldType" minOccurs="0" />
+            <xs:element name="PhoneNumber" type="StringFieldType" minOccurs="0" />
+            <xs:element name="EmailAddress" type="StringFieldType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Type" type="xs:string" use="required" />
+        <xs:attribute name="TypeId" type="xs:integer" use="required" />
+    </xs:complexType>
+
+    <!-- Names -->
+
+    <xs:complexType name="NameType">
+        <xs:complexContent>
+            <xs:extension base="TranslatedStringFieldType">
+                <xs:attribute name="Type" type="xs:string"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="NamesType">
+        <xs:sequence>
+            <xs:element name="Name" type="NameType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- FiscalYearEndType -->
+
+    <xs:complexType name="FiscalYearEndType">
+        <xs:sequence>
+            <xs:element name="Day" type="IntegerFieldType" />
+            <xs:element name="Month" type="IntegerFieldType" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Fund Companies -->
+
+    <xs:complexType name="ServiceProviderType">
+        <xs:sequence>
+            <xs:element name="Name" type="StringFieldType" />
+            <xs:element name="Code" type="StringFieldType" />
+            <xs:element name="AddressLine1" type="StringFieldType" minOccurs="0" />
+            <xs:element name="AddressLine2" type="StringFieldType" minOccurs="0" />
+            <xs:element name="AddressLine3" type="StringFieldType" minOccurs="0" />
+            <xs:element name="StateProvince" type="StringFieldType" minOccurs="0" />
+            <xs:element name="City" type="StringFieldType" minOccurs="0" />
+            <xs:element name="PostalCode" type="StringFieldType" minOccurs="0" />
+            <xs:element name="Country" type="StringFieldType" minOccurs="0" />
+            <xs:element name="Telephone" type="StringFieldType" minOccurs="0" />
+            <xs:element name="Fax" type="StringFieldType" minOccurs="0" />
+            <xs:element name="Email" type="StringFieldType" minOccurs="0" />
+            <xs:element name="Website" type="StringFieldType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Type" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="ServiceProvidersType">
+        <xs:sequence>
+            <xs:element name="ServiceProvider" type="ServiceProviderType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- Assets -->
+
+    <xs:complexType name="BenchmarkType">
+        <xs:sequence>
+            <xs:element name="Name" type="StringFieldType" />
+            <xs:element name="Code" type="IntegerFieldType" />
+        </xs:sequence>
+        <xs:attribute name="Type" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="BenchmarksType">
+        <xs:sequence>
+            <xs:element name="Benchmark" type="BenchmarkType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- Minimum Investments -->
+
+    <xs:complexType name="MinimumInvestmentsType">
+        <xs:sequence>
+            <xs:element name="Initial" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="Regular" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="Irregular" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="IRAInitial" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="IRARegular" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="IRAIrregular" type="DecimalFieldType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="UpdateDate" type="xs:date" use="optional" />
+        <xs:attribute name="Currency" type="xs:string" use="optional" />
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- Charges -->
+
+    <xs:complexType name="BreakpointType">
+        <xs:sequence>
+            <xs:element name="Charge" type="DecimalFieldType" />
+            <xs:element name="Value" type="DecimalFieldType" />
+            <xs:element name="SortOrder" type="IntegerFieldType" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ScheduleType">
+        <xs:sequence>
+            <xs:element name="Breakpoint" type="BreakpointType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="ValueType" type="xs:string" use="required" />
+        <xs:attribute name="Currency" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="ReclassificationType">
+        <xs:sequence>
+            <xs:element name="Asset" type="IdentityType" />
+            <xs:element name="NumberOfMonths" type="DecimalFieldType" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ChargeScheduleType">
+        <xs:complexContent>
+            <xs:extension base="ChargeType">
+                <xs:sequence>
+                    <xs:element name="Schedule" type="ScheduleType" />
+                    <xs:element name="Reclassification" type="ReclassificationType" minOccurs="0" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="ChargeTextualType">
+        <xs:complexContent>
+            <xs:extension base="ChargeType">
+                <xs:sequence>
+                    <xs:element name="Description" type="StringFieldType" minOccurs="0" />
+                    <xs:element name="PlanType" type="StringFieldType" minOccurs="0" />
+                    <xs:element name="Comments" type="StringFieldType" minOccurs="0" />
+                    <xs:element name="Charge" type="DecimalFieldType" minOccurs="0" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="ChargeType">
+        <xs:sequence>
+            <xs:element name="DOLFlag" type="BooleanFieldType" minOccurs="0" />
+            <xs:element name="Min" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="Max" type="DecimalFieldType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Type" type="xs:string" use="required" />
+        <xs:attribute name="EffectiveDate" type="xs:date" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="ChargesType">
+        <xs:sequence>
+            <xs:element name="ChargeSchedule" type="ChargeScheduleType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="ChargeTextual" type="ChargeTextualType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="ChargeGlobal" type="ChargeGlobalType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="ChargeGlobalType">
+        <xs:sequence>
+            <xs:element name="Min" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="Max" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="Actual" type="DecimalFieldType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Type" type="xs:string" use="required" />
+        <xs:attribute name="TypeId" type="xs:integer" use="optional" />
+    </xs:complexType>
+
+    <!-- Fees -->
+
+    <xs:complexType name="FeeType">
+        <xs:sequence>
+            <xs:element name="Value" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="Percent" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="Components" type="ReportedFeesType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Type" type="xs:string" use="required" />
+        <xs:attribute name="Id" type="xs:integer" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="ReportedFeesType">
+        <xs:sequence>
+            <xs:element name="Fee" type="FeeType" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ReportType">
+        <xs:sequence>
+            <xs:element name="ReportType" type="StringFieldType" minOccurs="0" />
+            <xs:element name="AverageNetAssets" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="PortfolioTurnover" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="DaysCovered" type="IntegerFieldType" minOccurs="0" />
+            <xs:element name="Currency" type="StringFieldType" minOccurs="0" />
+            <xs:element name="FeeSet" type="ReportedFeesType" />
+        </xs:sequence>
+        <xs:attribute name="ReportDate" type="xs:date" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="FeesType">
+        <xs:sequence>
+            <xs:element name="Report" type="ReportType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- Lipper Leaders -->
+
+    <xs:complexType name="LipperLeadersScoreType">
+        <xs:sequence>
+            <xs:element name="Value" type="IntegerFieldType" />
+            <xs:element name="Count" type="IntegerFieldType" />
+        </xs:sequence>
+        <xs:attribute name="Duration" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="LipperLeadersScoreCardType">
+        <xs:sequence>
+            <xs:element name="Score" type="LipperLeadersScoreType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="Type" type="xs:string" use="required" />
+        <xs:attribute name="AsOfDate" type="xs:date" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="LipperLeadersUniverseType">
+        <xs:sequence>
+            <xs:element name="ScoreCard" type="LipperLeadersScoreCardType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="LipperLeadersType">
+        <xs:sequence>
+            <xs:element name="Universe" type="LipperLeadersUniverseType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+
+    <!-- AssetValues -->
+
+    <xs:complexType name="YieldType">
+        <xs:sequence>
+            <xs:element name="Value" type="DecimalFieldType" minOccurs="0"  />
+            <xs:element name="Date" type="xs:date" minOccurs="0"  />
+        </xs:sequence>
+        <xs:attribute name="Type" type="xs:string" />
+    </xs:complexType>
+
+    <xs:complexType name="YieldsType">
+        <xs:sequence>
+            <xs:element name="Yield" type="YieldType" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AssetValuesType">
+        <xs:sequence>
+            <xs:element name="MonthEndTNA" type="DatedDecimalFieldType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="AggregatedTNA" type="DatedDecimalFieldType" minOccurs="0" />
+            <xs:element name="AverageNetAssets" type="DatedDecimalFieldType" minOccurs="0" />
+            <xs:element name="AggregatedANA" type="DatedDecimalFieldType" minOccurs="0" />
+            <xs:element name="DailyTNA" type="DatedDecimalFieldType" minOccurs="0" />
+            <xs:element name="GrossSales" type="DatedDecimalFieldType" minOccurs="0" />
+            <xs:element name="GrossSalesRatio" type="DatedDecimalFieldType" minOccurs="0" />
+            <xs:element name="Redemptions" type="DatedDecimalFieldType" minOccurs="0" />
+            <xs:element name="RedemptionRatio" type="DatedDecimalFieldType" minOccurs="0" />
+            <xs:element name="SharesOutstanding" type="DatedDecimalFieldType" minOccurs="0" />
+            <xs:element name="Yields" type="YieldsType" minOccurs="0" />
+            <xs:element name="TWInvestmentRatio" type="DatedDecimalFieldType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- Management -->
+
+    <xs:complexType name="PortfolioManagerType">
+        <xs:sequence>
+            <xs:element name="Name" type="StringFieldType" minOccurs="0" />
+            <xs:element name="StartDate" type="DateFieldType" minOccurs="0" />
+            <xs:element name="EndDate" type="DateFieldType" minOccurs="0" />
+            <xs:element name="Tenure" type="DecimalFieldType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Lead" type="xs:boolean" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="PortfolioManagersType">
+        <xs:sequence>
+            <xs:element name="Manager" type="PortfolioManagerType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- Countries Registered For Sale -->
+
+    <xs:complexType name="RegisteredForSaleInType">
+        <xs:sequence>
+            <xs:element name="Country" type="TranslatedIdentityType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- Classifications -->
+
+    <xs:complexType name="ClassType">
+        <xs:sequence>
+            <xs:element name="Name" type="TranslatedStringFieldType" />
+            <xs:element name="LongName" type="TranslatedStringFieldType" minOccurs="0" />
+            <xs:element name="Description" type="TranslatedStringFieldType" minOccurs="0" />
+            <xs:element name="StyleMatrix" type="StringFieldType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Id" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="ClassSchemeType">
+        <xs:sequence>
+            <xs:element name="Scheme" type="TranslatedIdentityType" />
+            <xs:element name="Classification" type="ClassType" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ClassificationsType">
+        <xs:sequence>
+            <xs:element name="Class" type="ClassSchemeType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- Attributes -->
+
+    <xs:complexType name="AttributeType">
+        <xs:sequence>
+            <xs:element name="Name" type="TranslatedStringFieldType" />
+            <xs:element name="Value" type="TranslatedIdentityType" />
+        </xs:sequence>
+        <xs:attribute name="Id" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="AttributeGroupType">
+        <xs:sequence>
+            <xs:element name="Name" type="TranslatedStringFieldType" minOccurs="0" />
+            <xs:element name="Attribute" type="AttributeType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="AttributesType">
+        <xs:sequence>
+            <xs:element name="AttributeGroup" type="AttributeGroupType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- Cross Reference Codes -->
+
+    <xs:complexType name="CrossReferenceCodeType">
+        <xs:simpleContent>
+            <xs:extension base="StringFieldType">
+                <xs:attribute name="Type" type="xs:string" use="required" />
+                <xs:attribute name="Id" type="xs:string" use="required" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="CrossReferenceCodesType">
+        <xs:sequence>
+            <xs:element name="Code" type="CrossReferenceCodeType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- Cumulative performance -->
+
+    <xs:complexType name="ClassRanksType">
+        <xs:all>
+            <xs:element name="Name" type="IdentityType" />
+            <xs:element name="Scheme" type="IdentityType" />
+            <xs:element name="Rank" type="IntegerFieldType" />
+            <xs:element name="UniverseSize" type="IntegerFieldType" minOccurs="0" />
+            <xs:element name="UniverseAverage" type="DecimalFieldType" minOccurs="0"  />
+            <xs:element name="UniverseMedian" type="DecimalFieldType" minOccurs="0"  />
+            <xs:element name="UniverseHigh" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="UniverseLow" type="DecimalFieldType" minOccurs="0"  />
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="CountryRanksType">
+        <xs:sequence>
+            <xs:element name="Class" type="ClassRanksType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="Country" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="ReturnByCurrencyType">
+        <xs:sequence>
+            <xs:element name="Value" type="DecimalFieldType" />
+            <xs:element name="Rank" type="CountryRanksType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="Currency" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="ReturnPeriodType">
+        <xs:sequence>
+            <xs:element name="ReturnByCurrency" type="ReturnByCurrencyType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="StartDate" type="xs:date" use="required" />
+        <xs:attribute name="Period" type="xs:string" use="required" />
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="ValueSetType">
+        <xs:sequence>
+            <xs:element name="Return" type="ReturnPeriodType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="ReturnsType">
+        <xs:complexContent>
+            <xs:extension base="ValueSetType">
+                <xs:attribute name="Type" type="xs:string" use="required" />
+                <xs:attribute name="EndDate" type="xs:date" use="required" />
+                <xs:attribute name="Alignment" type="xs:string" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="CalcPeriodType">
+        <xs:sequence>
+            <xs:element name="Benchmarks" type="BenchmarksType" minOccurs="0" />
+            <xs:element name="Value" type="CalcFieldType" maxOccurs="unbounded" />
+            <xs:element name="Ranks" type="CountryRanksType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="StartDate" type="xs:date" use="required" />
+        <xs:attribute name="Period" type="xs:string" use="required" />
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+
+    </xs:complexType>
+
+    <xs:complexType name="CalcSetType">
+        <xs:sequence>
+            <xs:element name="Calc" type="CalcPeriodType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="Type" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="StatisticsType">
+        <xs:sequence>
+            <xs:element name="CalcSet" type="CalcSetType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="EndDate" type="xs:date" use="required" />
+        <xs:attribute name="Alignment" type="xs:string" use="required" />
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="PerformanceType">
+        <xs:sequence>
+            <xs:element name="Returns" type="ReturnsType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="RollingPerformance" type="RollingReturnsType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="BestWorstPerformance" type="BestWorstPerformanceType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Statistics" type="StatisticsType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+
+    <!-- Best Worst -->
+
+    <xs:complexType name="BestValueType">
+        <xs:simpleContent>
+            <xs:extension base="DecimalFieldType">
+                <xs:attribute name="Date" type="xs:date" use="required" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="BestWorstPeriodType">
+        <xs:sequence>
+            <xs:element name="StartDate" type="DateFieldType" />
+            <xs:element name="EndDate" type="DateFieldType" />
+            <xs:element name="Best" type="BestValueType" />
+            <xs:element name="Worst" type="BestValueType" />
+        </xs:sequence>
+        <xs:attribute name="Timeframe" type="xs:string" use="required" />
+        <xs:attribute name="Currency" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="BestWorstPerformanceType">
+        <xs:sequence>
+            <xs:element name="Period" type="BestWorstPeriodType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+
+    <!-- Rolling performance -->
+
+    <xs:complexType name="RollingReturnsType">
+        <xs:sequence>
+            <xs:element name="Return" type="RollingValueType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="Series" type="xs:string" use="required" />
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="RollingValueType">
+        <xs:simpleContent>
+            <xs:extension base="CurrencyFieldType">
+                <xs:attribute name="StartDate" type="xs:date" use="required" />
+                <xs:attribute name="EndDate" type="xs:date" use="required" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <!-- Price History -->
+
+    <xs:complexType name="PriceType">
+        <xs:simpleContent>
+            <xs:extension base="DecimalFieldType">
+                <xs:attribute name="Estimate" type="xs:boolean" use="optional" />
+                <xs:attribute name="Type" type="xs:string" use="required" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="PriceSetType">
+        <xs:sequence>
+            <xs:element name="Price" type="PriceType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="Date" type="xs:date" use="required" />
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="PricesType">
+        <xs:sequence>
+            <xs:element name="PriceSet" type="PriceSetType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="Currency" type="xs:string" use="required" />
+        <xs:attribute name="StartDate" type="xs:date" use="required" />
+        <xs:attribute name="EndDate" type="xs:date" use="required" />
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+
+    <!-- Portfolio -->
+
+    <xs:complexType name="HoldingType">
+        <xs:sequence>
+            <xs:element name="Name" type="StringFieldType" />
+            <xs:element name="Weight" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="WeightPrevious" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="WeightChange" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="Rank" type="IntegerFieldType" minOccurs="0" />
+            <xs:element name="Type" type="IdentityType" minOccurs="0" />
+            <xs:element name="MarketValue" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="MarketValueCurrency" type="StringFieldType" minOccurs="0" />
+            <xs:element name="MaturityDate" type="DateFieldType" minOccurs="0" />
+            <xs:element name="CouponRate" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="ParValue" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="ParCurrency" type="StringFieldType" minOccurs="0" />
+            <xs:element name="SharesHeld" type="DecimalFieldType" minOccurs="0" />
+            <xs:element name="CrossReferenceCodes" type="CrossReferenceCodesType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Id" type="xs:integer" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="HoldingsType">
+        <xs:sequence>
+            <xs:element name="Holding" type="HoldingType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="Date" type="xs:date" use="required" />
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="CharacteristicType">
+        <xs:sequence>
+            <xs:element name="Name" type="TranslatedIdentityType" />
+            <xs:element name="Value" type="DecimalFieldType" />
+        </xs:sequence>
+        <xs:attribute name="Id" type="xs:integer" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="CharacteristicsType">
+        <xs:sequence>
+            <xs:element name="Char" type="CharacteristicType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="Date" type="xs:date" use="required" />
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="AllocationItemType">
+        <xs:sequence>
+            <xs:element name="Name" type="TranslatedStringFieldType" />
+            <xs:element name="Weight" type="xs:decimal" minOccurs="0" />
+            <xs:element name="Rank" type="xs:integer" minOccurs="0" />
+            <xs:element name="Level" type="xs:integer" minOccurs="0" />
+            <xs:element name="Allocations" type="ChildrenAllocationsType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Id" type="xs:integer" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="ChildrenAllocationsType">
+        <xs:sequence>
+            <xs:element name="Item" type="AllocationItemType" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AllocationSchemeType">
+        <xs:sequence>
+            <xs:element name="Item" type="AllocationItemType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="AllocationsType">
+        <xs:sequence>
+            <xs:element name="Scheme" type="AllocationSchemeType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="Date" type="xs:date" use="required" />
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <xs:complexType name="PortfolioType">
+        <xs:sequence>
+            <xs:element name="Holdings" type="HoldingsType"  minOccurs="0" />
+            <xs:element name="CollectedAllocations" type="AllocationsType"  minOccurs="0" />
+            <xs:element name="DerivedAllocations" type="AllocationsType"  minOccurs="0" />
+            <xs:element name="Characteristics" type="CharacteristicsType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+        <xs:attribute name="Date" type="xs:date" use="optional" />
+        <xs:attribute name="DataSource" type="xs:string" use="optional" />
+    </xs:complexType>
+
+    <!-- Flows -->
+
+    <xs:complexType name="FlowsType">
+        <xs:sequence>
+            <xs:element name="Flow" type="FlowType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="Frequency" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="FlowType">
+        <xs:sequence>
+            <xs:element name="StartDate" type="xs:date" />
+            <xs:element name="EndDate" type="xs:date" />
+            <xs:element name="Currency" type="xs:string" />
+            <xs:element name="Value" type="xs:decimal" />
+            <xs:element name="PercentOfTNA" type="xs:decimal" minOccurs="0" />
+            <xs:element name="TNA" type="xs:decimal" minOccurs="0" />
+            <xs:element name="ChangeInTNA" type="xs:decimal" minOccurs="0" />
+            <xs:element name="Return" type="xs:decimal" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Performance Factors -->
+
+    <xs:complexType name="PerformanceFactorsType">
+        <xs:sequence>
+            <xs:element name="PerformanceFactor" type="PerformanceFactorType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+        <xs:attribute name="Type" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="PerformanceFactorType">
+        <xs:sequence>
+            <xs:element name="CumulativeFactor" type="xs:decimal" minOccurs="0" />
+            <xs:element name="EstimateCount" type="xs:integer" minOccurs="0" />
+            <xs:element name="NACount" type="xs:integer" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="DeltaStatus" type="xs:string" use="optional" />
+        <xs:attribute name="DataDate" type="xs:date" use="required" />
+    </xs:complexType>
+
+    <!-- ******************** Financial History ********************  -->
+
+    <xs:complexType name="FinancialHistoryType">
+        <xs:sequence>
+            <xs:element name="RollingPerformance" type="RollingReturnsType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="Prices" type="PricesType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Distributions" type="DistributionCategoryType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Splits" type="SplitsType"  minOccurs="0" />
+            <xs:element name="PerformanceFactors" type="PerformanceFactorsType"  minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="Id" type="xs:integer" use="required" />
+    </xs:complexType>
+
+
+    <!-- ******************** Portfolio History ********************  -->
+
+    <xs:complexType name="PortfolioHistoryType">
+        <xs:sequence>
+            <xs:element name="Portfolio" type="PortfolioType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="Id" type="xs:integer" use="required" />
+    </xs:complexType>
+
+    <!-- ******************** Flows ********************  -->
+
+    <xs:complexType name="FlowsHistoryType">
+        <xs:sequence>
+            <xs:element name="Flows" type="FlowsType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="Id" type="xs:integer" use="required" />
+    </xs:complexType>
+
+</xs:schema>
