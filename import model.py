@@ -6,7 +6,8 @@ import os
 import zipfile
 import xml.etree.ElementTree as ET
 from datetime import datetime as dt
-
+import pandas as pd
+os.chdir("C:\\Users\\u0136211\\Documents\\GitHub\\LGDF-Asset-Overview-Import\\")
 #%%
 #This first part sets up the variables, such as FTP credentials and the feed specifics
 mode = input("Use config file? (Y/N) ")
@@ -65,6 +66,8 @@ batches_to_process = sorted(batches_to_process)
 
 #%%
 #This next part downloads each of the zip files for each of the batches in turn, unzipping them, parsing their contents before writing them to a database
+names = []
+
 for batch in batches_to_process:
     for file in folder_contents:
         file_name = file[0]
@@ -81,11 +84,29 @@ for batch in batches_to_process:
         for zipfilename in os.listdir(temp):
             if not (zipfile.is_zipfile(temp+ '\\' + zipfilename)): continue
             print(('Unzipping ' + temp + '\\' + zipfilename))
-            zipfile.ZipFile(temp+ '\\' + zipfilename).extractall()
+            zipfile.ZipFile(temp+ '\\' + zipfilename).extractall(path=temp)
             os.remove(temp+ '\\' + zipfilename)
             for filename in os.listdir(temp):
-                if not filename.endswith('.xml'): continue
+                if not filename.endswith('.xml'): 
+                    continue
+                if filename.startswith("1"):
+                    os.remove(temp+ '\\' + filename)
+                    continue
                 print('Processing ' + filename)
                 tree = ET.parse(temp+ '\\' + filename)
                 root = tree.getroot()
                 ns = str('{http://schemas.thomsonreuters.com/2012/06/30/df5v1.0}')
+                parent_id = root.find("./"+ns+"AssetOverview").get("Id")
+                share_classes = root.find("./"+ns+"AssetOverview/"+ns+"ShareClasses")
+                for share_class in share_classes.iter("ShareClass"):
+                    lipper_id = share_class.get("Id")
+                    names = share_class.find("./"+ns+"Profile/"+ns+"Names")
+                    for name in names.iter("Name"):
+                        name_type = name.get("Type")
+                        fund_name = name.find("./"+ns+"Text[@Language='ENG']").text
+                        current_names = (lipper_id, name_type, fund_name)
+                        names.append(current_names)
+                os.remove(temp+ '\\' + filename)
+            names_df = pd.DataFrame.from_records(names, columns=["Lipper ID", "Name Type", "Name"])
+            print(names_df)
+    
