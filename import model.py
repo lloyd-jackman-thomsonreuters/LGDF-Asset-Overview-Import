@@ -7,6 +7,8 @@ import zipfile
 import xml.etree.ElementTree as ET
 from datetime import datetime as dt
 import pandas as pd
+from sqlalchemy import create_engine
+
 os.chdir("C:\\Users\\u0136211\\Documents\\GitHub\\LGDF-Asset-Overview-Import\\")
 #%%
 #This first part sets up the variables, such as FTP credentials and the feed specifics
@@ -68,6 +70,8 @@ batches_to_process = sorted(batches_to_process)
 #This next part downloads each of the zip files for each of the batches in turn, unzipping them, parsing their contents before writing them to a database
 names = []
 
+engine = create_engine('postgresql://postgres@localhost:5432/lgdf')
+
 for batch in batches_to_process:
     for file in folder_contents:
         file_name = file[0]
@@ -95,7 +99,7 @@ for batch in batches_to_process:
                 print('Processing ' + filename)
                 tree = ET.parse(temp+ '\\' + filename)
                 root = tree.getroot()
-                ns = str('{http://schemas.thomsonreuters.com/2012/06/30/df5v1.0}')
+                ns = root.tag[:-4]
                 parent_id = root.find("./"+ns+"AssetOverview").get("Id")
                 share_classes = root.find("./"+ns+"AssetOverview/"+ns+"ShareClasses")
                 for share_class in share_classes.iter("ShareClass"):
@@ -109,4 +113,9 @@ for batch in batches_to_process:
                 os.remove(temp+ '\\' + filename)
             names_df = pd.DataFrame.from_records(names, columns=["Lipper ID", "Name Type", "Name"])
             print(names_df)
+            if zipfilename.endswith("FUL.zip"):
+                sql_mode = "replace"
+            else:
+                sql_mode = "append"
+            names_df.to_sql(name="Name", con=engine, schema="lgdf", if_exists=sql_mode, index=False)
     
